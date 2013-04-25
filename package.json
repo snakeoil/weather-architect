@@ -1,0 +1,28 @@
+{
+  "name": "weather-architect",
+  "version": "0.0.0",
+  "description": "weather-architect =================",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/snakeoil/weather-architect.git"
+  },
+  "keywords": [
+    "voxel"
+  ],
+  "author": "maxmechanic, harrisonm",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "ae55e3c1b41b7f5de0abbc204aa44014c4674341",
+  "dependencies": {
+    "express": "~3.2.0",
+    "concat-stream": "~0.1.1",
+    "painterly-textures": "0.0.3",
+    "voxel-player": "~0.1.0",
+    "voxel-engine": "~0.17.0",
+    "hyperquest": "~0.1.4"
+  }
+}

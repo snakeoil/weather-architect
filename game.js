@@ -1,19 +1,18 @@
 var hq = require('hyperquest');
 var qs = require('querystring');
 var concat = require('concat-stream');
-var textures = require('painterly-textures')(__dirname)
 var player = require('voxel-player')
 var createGame = require('voxel-engine')
-
-var Windsock = require('./voxel-windsock')
+var Windsock = require('voxel-windsock')
 var windsock = new Windsock() 
 
 var options = {
-  texturePath: textures,
+  texturePath: './textures/',
   generate: function(x, y, z) {
     return y === 0 ? 1 : 0
   }
 }
+
 var game = createGame(options)
 game.windsock = windsock
 window.game = game
@@ -34,4 +33,18 @@ function buildWindsock(pos) {
 
 }
 
+var requestForecast = function (lat, lon) {
+	console.log(lat + ' ' + lon)
+	var coordinates = {
+		longitude: lon,
+		latitude: lat
+	}
+	var query = qs.stringify(coordinates)
+	console.log(query)
+	var req = hq.get('/forecast?' + query);
+	req.on('response', function(res) {
+		console.log(res)
+	})
+}
 
+game.requestForecast = requestForecast

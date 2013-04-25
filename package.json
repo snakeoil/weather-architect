@@ -24,7 +24,7 @@
     "voxel-player": "~0.1.0",
     "voxel-engine": "~0.17.0",
     "hyperquest": "~0.1.4",
-    "voxel-windsock": "0.0.2",
+    "voxel-windsock": "0.0.3",
     "forecast.io": "0.0.3"
   }
 }

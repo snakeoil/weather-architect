@@ -25,8 +25,9 @@ var container = document.body
 game.appendTo(container)
 
 function buildWindsock(pos, speed, bearing) {
+  console.log(pos + ',' + speed + ',' + bearing)
 	var blueprint = windsock.blueprint(pos, speed, bearing)
-
+  console.log(blueprint)
 	blueprint.forEach(function(pos) {
 		game.createBlock(pos,2)
 	})
@@ -56,7 +57,8 @@ var requestForecast = function (lat, lon) {
 }
 
 function parseWeather(data, i) {
-	buildWindsock([i, 0, 0], data.windSpeed, data.windBearing)
+	buildWindsock([i, 0, i], data.windSpeed, data.windBearing)
 }
 
+requestForecast("32.987824","-96.751427")
 game.requestForecast = requestForecast

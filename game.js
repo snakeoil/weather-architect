@@ -34,22 +34,24 @@ function buildWindsock(pos, speed, bearing) {
 }
 
 var requestForecast = function (lat, lon) {
-	console.log(lat + ' ' + lon)
+
 	var coordinates = {
 		longitude: lon,
 		latitude: lat
 	}
 	var query = qs.stringify(coordinates)
-	console.log(query)
-	var req = hq.get('/forecast?' + query);
-	req.on('end', function(res) {
-		var i = 0
-		console.log('response is ' + res)
-
-		// parsed.data.forEach(function(data) {
-		// 	parseWeather(data,i)
-		// 	i++
-		// })
+	var req = hq.get('/forecast?' + query)
+	var i = 0;
+	var weatherData = ''
+	req.on('data', function(data) {
+		weatherData += data
+	})
+	req.on('end', function() {
+		weatherJSON = JSON.parse(weatherData)
+		weatherJSON.data.forEach(function(data) {
+			parseWeather(data, i)
+			i += 5
+		})
 	})
 }
 

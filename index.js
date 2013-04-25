@@ -2,12 +2,14 @@ var express = require('express')
 var app = express()
 var server = require('http').createServer(app)
 var util = require('util')
+var config = require('./config.js')
+var keys = new config()
 
 var events = require('events')
 var e = new events.EventEmitter()
 
 var Forecast = require('forecast.io')
-forecast = new Forecast({APIKey: process.env.FORECAST_API_KEY})
+forecast = new Forecast({APIKey: keys.forecast})
 
 app.use(express.bodyParser())
 app.use(express.static(__dirname + '/public'))

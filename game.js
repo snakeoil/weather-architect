@@ -24,11 +24,11 @@ avatar.yaw.position.set(0,20,0)
 var container = document.body
 game.appendTo(container)
 
-function buildWindsock(pos) {
-	var blueprint = windsock.blueprint(pos)
+function buildWindsock(pos, speed, bearing) {
+	var blueprint = windsock.blueprint(pos, speed, bearing)
 
 	blueprint.forEach(function(pos) {
-		game.createBlock(pos,3)
+		game.createBlock(pos,2)
 	})
 
 }
@@ -42,9 +42,19 @@ var requestForecast = function (lat, lon) {
 	var query = qs.stringify(coordinates)
 	console.log(query)
 	var req = hq.get('/forecast?' + query);
-	req.on('response', function(res) {
-		console.log(res)
+	req.on('end', function(res) {
+		var i = 0
+		console.log('response is ' + res)
+
+		// parsed.data.forEach(function(data) {
+		// 	parseWeather(data,i)
+		// 	i++
+		// })
 	})
+}
+
+function parseWeather(data, i) {
+	buildWindsock([i, 0, 0], data.windSpeed, data.windBearing)
 }
 
 game.requestForecast = requestForecast

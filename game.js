@@ -4,7 +4,7 @@ var concat = require('concat-stream');
 var player = require('voxel-player')
 var createGame = require('voxel-engine')
 var Windsock = require('voxel-windsock')
-var windsock = new Windsock() 
+var windsock = new Windsock()
 
 var options = {
   texturePath: './textures/',
@@ -34,6 +34,37 @@ function buildWindsock(pos, speed, bearing) {
 
 }
 
+
+
+function buildTower(pos, temp) {
+  console.log(pos + ',' + temp)
+  var blueprints = []
+  for (var i = 0; i <= temp; i++) {
+		if (i < Math.round(temp/2)) {
+			blueprints.push([pos[0]-1,i,pos[2]])
+			blueprints.push([pos[0]+1,i,pos[2]])
+			blueprints.push([pos[0],i,pos[2]-1])
+			blueprints.push([pos[0],i,pos[2]+1])
+		}
+
+        if (i === temp) {
+            for (var j = 0; j < 4; j++) {
+                blueprints.push([pos[0]-j,i,pos[2]])
+                blueprints.push([pos[0]+j,i,pos[2]])
+                blueprints.push([pos[0],i,pos[2]+j])
+                blueprints.push([pos[0],i,pos[2]-j])
+            }
+        }
+
+		blueprints.push([pos[0],i,pos[2]])
+  }
+  console.log(blueprints)
+	blueprints.forEach(function(pos) {
+		game.createBlock(pos,2)
+	})
+
+}
+
 var requestForecast = function (lat, lon) {
 
 	var coordinates = {
@@ -58,6 +89,7 @@ var requestForecast = function (lat, lon) {
 
 function parseWeather(data, i) {
 	buildWindsock([i, 0, i], data.windSpeed, data.windBearing)
+	buildTower([i + 10, 0, i], Math.round(data.temperature / 4))
 }
 
 requestForecast("32.987824","-96.751427")

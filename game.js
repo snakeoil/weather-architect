@@ -1,6 +1,6 @@
-var hq = require('hyperquest');
-var qs = require('querystring');
-var concat = require('concat-stream');
+var hq = require('hyperquest')
+var qs = require('querystring')
+var concat = require('concat-stream')
 var player = require('voxel-player')
 var createGame = require('voxel-engine')
 var Windsock = require('voxel-windsock')
@@ -26,11 +26,11 @@ game.appendTo(container)
 
 function buildWindsock(pos, speed, bearing) {
   console.log(pos + ',' + speed + ',' + bearing)
-	var blueprint = windsock.blueprint(pos, speed, bearing)
+    var blueprint = windsock.blueprint(pos, speed, bearing)
   console.log(blueprint)
-	blueprint.forEach(function(pos) {
-		game.createBlock(pos,2)
-	})
+    blueprint.forEach(function(pos) {
+        game.createBlock(pos,2)
+    })
 
 }
 
@@ -40,12 +40,24 @@ function buildTower(pos, temp) {
   console.log(pos + ',' + temp)
   var blueprints = []
   for (var i = 0; i <= temp; i++) {
-		if (i < Math.round(temp/2)) {
-			blueprints.push([pos[0]-1,i,pos[2]])
-			blueprints.push([pos[0]+1,i,pos[2]])
-			blueprints.push([pos[0],i,pos[2]-1])
-			blueprints.push([pos[0],i,pos[2]+1])
-		}
+
+        if (i < 3) {
+            blueprints.push([pos[0]-2,i,pos[2]])
+            blueprints.push([pos[0]+2,i,pos[2]])
+            blueprints.push([pos[0],i,pos[2]-2])
+            blueprints.push([pos[0],i,pos[2]+2])
+        }
+
+        if (i < 5) {
+            blueprints.push([pos[0]-1,i,pos[2]])
+            blueprints.push([pos[0]-1,i,pos[2]+1])
+            blueprints.push([pos[0]+1,i,pos[2]])
+            blueprints.push([pos[0]+1,i,pos[2]+1])
+            blueprints.push([pos[0]+1,i,pos[2]-1])
+            blueprints.push([pos[0]-1,i,pos[2]-1])
+            blueprints.push([pos[0],i,pos[2]-1])
+            blueprints.push([pos[0],i,pos[2]+1])
+        }
 
         if (i === temp) {
             for (var j = 0; j < 4; j++) {
@@ -56,40 +68,40 @@ function buildTower(pos, temp) {
             }
         }
 
-		blueprints.push([pos[0],i,pos[2]])
+        blueprints.push([pos[0],i,pos[2]])
   }
   console.log(blueprints)
-	blueprints.forEach(function(pos) {
-		game.createBlock(pos,2)
-	})
+    blueprints.forEach(function(pos) {
+        game.createBlock(pos,5)
+    })
 
 }
 
 var requestForecast = function (lat, lon) {
 
-	var coordinates = {
-		longitude: lon,
-		latitude: lat
-	}
-	var query = qs.stringify(coordinates)
-	var req = hq.get('/forecast?' + query)
-	var i = 0;
-	var weatherData = ''
-	req.on('data', function(data) {
-		weatherData += data
-	})
-	req.on('end', function() {
-		weatherJSON = JSON.parse(weatherData)
-		weatherJSON.data.forEach(function(data) {
-			parseWeather(data, i)
-			i += 5
-		})
-	})
+    var coordinates = {
+        longitude: lon,
+        latitude: lat
+    }
+    var query = qs.stringify(coordinates)
+    var req = hq.get('/forecast?' + query)
+    var i = 1
+    var weatherData = ''
+    req.on('data', function(data) {
+        weatherData += data
+    })
+    req.on('end', function() {
+        weatherJSON = JSON.parse(weatherData)
+        weatherJSON.data.forEach(function(data) {
+            parseWeather(data, i)
+            i += 5
+        })
+    })
 }
 
 function parseWeather(data, i) {
-	buildWindsock([i, 0, i], data.windSpeed, data.windBearing)
-	buildTower([i + 10, 0, i], Math.round(data.temperature / 4))
+    buildWindsock([i, 0, i], data.windSpeed, data.windBearing)
+    buildTower([i, 0, i + 15], Math.round(data.temperature / 4))
 }
 
 requestForecast("32.987824","-96.751427")

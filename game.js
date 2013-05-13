@@ -77,6 +77,69 @@ function buildTower(pos, temp) {
 
 }
 
+function buildSpire(pos, ozone) {
+  var blueprints = []
+  for (var i = 0; i <= ozone; i++) {
+        if (i < 2) {
+            blueprints.push([pos[0]-1,i,pos[2]])
+            blueprints.push([pos[0]+1,i,pos[2]])
+            blueprints.push([pos[0]-2,i,pos[2]])
+            blueprints.push([pos[0]+2,i,pos[2]])
+            blueprints.push([pos[0],i,pos[2]-2])
+            blueprints.push([pos[0],i,pos[2]+2])
+            blueprints.push([pos[0],i,pos[2]-1])
+            blueprints.push([pos[0],i,pos[2]+1])
+            blueprints.push([pos[0]+1,i,pos[2]-2])
+            blueprints.push([pos[0]+2,i,pos[2]+2])
+            blueprints.push([pos[0]-1,i,pos[2]-1])
+            blueprints.push([pos[0]-1,i,pos[2]+1])
+        }
+
+        if ((i % 2) === 1 ) {
+            blueprints.push([pos[0]-2,i,pos[2]])
+            blueprints.push([pos[0]+2,i,pos[2]])
+        }
+
+        if ((i % 2) === 0 ) {
+            blueprints.push([pos[0]-1,i,pos[2]+1])
+            blueprints.push([pos[0]+1,i,pos[2]+1])
+            blueprints.push([pos[0]+1,i,pos[2]-1])
+            blueprints.push([pos[0]-1,i,pos[2]-1])
+        }
+
+        if (i === (ozone - 1)) {
+            blueprints.push([pos[0]-1,i,pos[2]])
+            blueprints.push([pos[0]+1,i,pos[2]])
+            blueprints.push([pos[0]-2,i,pos[2]])
+            blueprints.push([pos[0]+2,i,pos[2]])
+            blueprints.push([pos[0],i,pos[2]-2])
+            blueprints.push([pos[0],i,pos[2]+2])
+            blueprints.push([pos[0],i,pos[2]-1])
+            blueprints.push([pos[0],i,pos[2]+1])
+            blueprints.push([pos[0]+1,i,pos[2]-2])
+            blueprints.push([pos[0]+2,i,pos[2]+2])
+            blueprints.push([pos[0]-1,i,pos[2]-1])
+            blueprints.push([pos[0]-1,i,pos[2]+1])
+        }
+
+        if (i === ozone) {
+            for (var j = 0; j < 4; j++) {
+                blueprints.push([pos[0]-j,i,pos[2]])
+                blueprints.push([pos[0]+j,i,pos[2]])
+                blueprints.push([pos[0],i,pos[2]+j])
+                blueprints.push([pos[0],i,pos[2]-j])
+            }
+        }
+
+        blueprints.push([pos[0],i,pos[2]])
+  }
+  console.log(blueprints)
+    blueprints.forEach(function(pos) {
+        game.createBlock(pos,4)
+    })
+
+}
+
 var requestForecast = function (lat, lon) {
 
     var coordinates = {
@@ -94,14 +157,15 @@ var requestForecast = function (lat, lon) {
         weatherJSON = JSON.parse(weatherData)
         weatherJSON.data.forEach(function(data) {
             parseWeather(data, i)
-            i += 5
+            i += 7
         })
     })
 }
 
 function parseWeather(data, i) {
-    buildWindsock([i, 0, i], data.windSpeed, data.windBearing)
-    buildTower([i, 0, i + 15], Math.round(data.temperature / 4))
+    buildWindsock([30, 0, i], data.windSpeed, data.windBearing)
+    buildTower([5, 0, i], Math.round(data.temperature / 4))
+    buildSpire([-20, 0 , i], Math.round(data.ozone / 10))
 }
 
 requestForecast("32.987824","-96.751427")
